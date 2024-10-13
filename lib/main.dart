@@ -1,3 +1,4 @@
+import 'package:finstagram/views/pages/home_page.dart';
 import 'package:finstagram/views/pages/login_page.dart';
 import 'package:finstagram/views/pages/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'F-Instagram',
       theme: ThemeData(
+        primaryColor: Colors.redAccent,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.redAccent),
         useMaterial3: true,
       ),
-     initialRoute: 'login',
+     debugShowCheckedModeBanner: false,
+     initialRoute: 'home',
       routes: {
         'login': (context)=> LoginPage(),
-        'signup': (context)=> SignupPage()
+        'signup': (context)=> SignupPage(),
+        'home': (context)=> HomePage()
       },
     );
   }

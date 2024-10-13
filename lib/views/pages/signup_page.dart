@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -10,7 +13,8 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   double? _deviceHeight, _deviceWidth;
   final GlobalKey<FormState> _signupFormkey = GlobalKey<FormState>();
-  String? name,email, password;
+  String? name, email, password;
+  File? image;
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -24,7 +28,12 @@ class _SignupPageState extends State<SignupPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             mainAxisSize: MainAxisSize.max,
-            children: [_textTitle(),_signupForm(), _signupButton()],
+            children: [
+              _textTitle(),
+              _profileImageWidget(),
+              _signupForm(),
+              _signupButton()
+            ],
           ),
         ),
       )),
@@ -40,44 +49,44 @@ class _SignupPageState extends State<SignupPage> {
 
   Widget _signupButton() {
     return MaterialButton(
-      onPressed: () {},
+      onPressed: _registerUser,
       minWidth: _deviceWidth! * 0.50,
       height: _deviceHeight! * 0.05,
       color: Colors.redAccent,
       child: Text(
-        'Reister Here',
+        'Sign Up',
         style: TextStyle(
             color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
       ),
     );
   }
-  Widget _signupForm(){
+
+  Widget _signupForm() {
     return Container(
-      height: _deviceHeight!*0.30,
+      height: _deviceHeight! * 0.30,
       child: Form(
         key: _signupFormkey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
-          children: [_nameTextField(),_emailTextField(),_passwordTextField()],
+          children: [_nameTextField(), _emailTextField(), _passwordTextField()],
         ),
       ),
     );
   }
-  Widget _nameTextField(){
+
+  Widget _nameTextField() {
     return TextFormField(
-      decoration: InputDecoration(
-        hintText: 'Name'
-      ),
-      validator: (value)=> value!.length > 0 ? null : 'please enter a name' ,
-      onSaved: (value){
+      decoration: InputDecoration(hintText: 'Name'),
+      validator: (value) => value!.length > 0 ? null : 'please enter a name',
+      onSaved: (value) {
         setState(() {
-          name= value;
+          name = value;
         });
       },
     );
-
   }
+
   Widget _emailTextField() {
     return TextFormField(
       decoration: InputDecoration(hintText: 'Email.....'),
@@ -103,11 +112,44 @@ class _SignupPageState extends State<SignupPage> {
         });
       },
       validator: (_value) {
-        return   _value!.length > 6
+        return _value!.length > 6
             ? null
             : "Please enter a password greater than 6 characters";
       },
     );
+  }
+
+  Widget _profileImageWidget() {
+    var imageProvider = image != null
+        ? FileImage(image!)
+        : NetworkImage(
+            'https://images.pexels.com/photos/3761264/pexels-photo-3761264.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    return GestureDetector(
+      onTap: () {
+        FilePicker.platform.pickFiles(type: FileType.image).then((result) {
+          setState(() {
+            image = File(result!.files.first.path!);
+
+          });
+        });
+      },
+      child: Container(
+        height: _deviceHeight! * 0.15,
+        width: _deviceWidth! * 0.15,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+          fit: BoxFit.cover,
+          image: imageProvider as ImageProvider,
+        )),
+      ),
+    );
+  }
+
+  void _registerUser(){
+    if(_signupFormkey.currentState!.validate() && image != null){
+      _signupFormkey.currentState!.save();
+
+    }
   }
 
 }
