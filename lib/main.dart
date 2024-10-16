@@ -1,9 +1,21 @@
+import 'package:finstagram/model/services/service.dart';
 import 'package:finstagram/views/pages/home_page.dart';
 import 'package:finstagram/views/pages/login_page.dart';
 import 'package:finstagram/views/pages/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:get_it/get_it.dart';
 
-void main() {
+
+
+
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  GetIt.instance.registerSingleton<FirebaseService>(FirebaseService());
   runApp(const MyApp());
 }
 

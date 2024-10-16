@@ -1,4 +1,6 @@
+import 'package:finstagram/model/services/service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,10 +10,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  FirebaseService? _firebaseService;
   double? _deviceHeight, _deviceWidth;
   GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
   String? email;
   String? password;
+
+  @override
+  void initState() {
+
+    super.initState();
+    _firebaseService = GetIt.instance.get<FirebaseService>();
+  }
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -102,8 +112,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void loginUser() {
-    if (_loginFormKey.currentState!.validate()) {}
+  void loginUser()async {
+    if (_loginFormKey.currentState!.validate()) {
+      _loginFormKey.currentState!.save();
+      bool _result = await _firebaseService!.loginUser(email: email!, password: password!);
+      if(_result) Navigator.popAndPushNamed(context, 'home');
+    }
   }
   Widget _registerPageLink(){
     return GestureDetector(
