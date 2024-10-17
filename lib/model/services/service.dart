@@ -82,4 +82,7 @@ Future<bool> postImage(File _image) async{
      return false;
    }
 }
+Stream<QuerySnapshot> getLatestPosts(){
+  return  _db.collection(POST_COLLECTION).orderBy('timestamp', descending: true).snapshots();
+}
 }
