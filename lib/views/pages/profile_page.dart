@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finstagram/model/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -52,5 +53,35 @@ class _ProfilePageState extends State<ProfilePage> {
         image: DecorationImage(fit: BoxFit.cover, image: NetworkImage(_firebaseService!.currentUser!["image"]))
       ),
     );
+  }
+  Widget _postGridView(){
+    return Expanded(child:
+    StreamBuilder<QuerySnapshot>(stream: _firebaseService!.getPostForUser(), builder: (BuildContext context, AsyncSnapshot snapshot) {
+    if(snapshot.hasData){
+      List posts = snapshot.data!.docs.map((e)=> e.data()).toList();
+      return GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 2, crossAxisSpacing: 2),
+          itemCount: posts.length,
+          itemBuilder: (context, index){
+        Map post = posts[index];
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage( fit: BoxFit.cover, image: NetworkImage(post["image"],),),
+          ),
+        );
+
+          });
+    }else{
+
+      return Center(
+        child: CircularProgressIndicator(
+          color: Colors.red,
+        ),
+      );
+    }
+
+
+    },)
+    );
+
   }
 }
