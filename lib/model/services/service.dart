@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:path/path.dart' as p;
 class FirebaseService {
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseStorage _storage = FirebaseStorage.instance;
@@ -12,6 +15,32 @@ class FirebaseService {
   String USER_COLLECTION= 'users';
 Map? currentUser;
   FirebaseService();
+  Future<bool> registerUser({
+    required String name,
+    required String email,
+    required String password,
+    required File image,
+}) async{
+    try{
+UserCredential _userCredential = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+String userId= _userCredential.user!.uid;
+String _fileName = Timestamp.now().millisecondsSinceEpoch.toString() + p.extension(image.path);
+    UploadTask _task= _storage.ref('images/$userId/$_fileName').putFile(image);
+ return   _task.then((_snapshot) async{
+   String _downloadUrl = await _snapshot.ref.getDownloadURL();
+   await _db.collection(USER_COLLECTION).doc(userId).set({
+     "name": name,
+     "email": email,
+     "image": _downloadUrl
+   });
+   return true;
+ });
+    }catch(e){
+      print(e);
+      return false;
+    }
+
+  }
   Future<bool> loginUser(
       {required String email, required String password}) async {
     try {

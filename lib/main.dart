@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
      debugShowCheckedModeBanner: false,
-     initialRoute: 'home',
+     initialRoute: 'login',
       routes: {
         'login': (context)=> LoginPage(),
         'signup': (context)=> SignupPage(),
