@@ -18,8 +18,8 @@ class _HomePageState extends State<HomePage> {
   int _currentPage =0 ;
   FirebaseService? _firebaseService;
   final List<Widget> _pages = [
-   ProfilePage(),
-    FeedPage()
+   const ProfilePage(),
+  const   FeedPage()
   ];
   @override
   void initState() {
@@ -32,10 +32,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.redAccent,
-        title: Text('F-instagram'),
+        title: const Text('F-instagram'),
         actions: [
           GestureDetector(
-            child: Icon(Icons.add_a_photo),
+            child: const Icon(Icons.add_a_photo),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                 await _firebaseService!.logout();
                 Navigator.popAndPushNamed(context, 'login');
               },
-              child: Icon(Icons.logout),
+              child: const Icon(Icons.logout),
             ),
           )
         ],
@@ -57,9 +57,9 @@ class _HomePageState extends State<HomePage> {
   Widget _bottomNavigationBar() {
     return BottomNavigationBar(
       currentIndex: _currentPage,
-      onTap: (_index){
+      onTap: (index){
         setState(() {
-          _currentPage=_index;
+          _currentPage=index;
         });
 
       },
@@ -76,8 +76,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
   void postImage()async {
-    FilePickerResult? _result = await FilePicker.platform.pickFiles(type:FileType.image );
-  File image= File(_result!.files.first.path!);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type:FileType.image );
+  File image= File(result!.files.first.path!);
   await _firebaseService!.postImage(image);
   }
 }

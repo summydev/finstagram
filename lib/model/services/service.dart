@@ -1,17 +1,17 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 import 'package:path/path.dart' as p;
 
 class FirebaseService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseStorage _storage = FirebaseStorage.instance;
-  FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+ final  FirebaseStorage _storage = FirebaseStorage.instance;
+ final  FirebaseFirestore _db = FirebaseFirestore.instance;
 
   String USER_COLLECTION = 'users';
   String POST_COLLECTION = 'posts';
